@@ -460,7 +460,7 @@ func (ac *activeConn) firstError(errs ...error) error {
 
 func (ac *activeConn) Close() (err error) {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return nil
 	}
 	ac.pc = nil
@@ -506,7 +506,7 @@ func (ac *activeConn) Close() (err error) {
 
 func (ac *activeConn) Err() error {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return errConnClosed
 	}
 	return pc.c.Err()
@@ -514,7 +514,7 @@ func (ac *activeConn) Err() error {
 
 func (ac *activeConn) Do(commandName string, args ...interface{}) (reply interface{}, err error) {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return nil, errConnClosed
 	}
 	ci := lookupCommandInfo(commandName)
@@ -524,7 +524,7 @@ func (ac *activeConn) Do(commandName string, args ...interface{}) (reply interfa
 
 func (ac *activeConn) DoWithTimeout(timeout time.Duration, commandName string, args ...interface{}) (reply interface{}, err error) {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return nil, errConnClosed
 	}
 	cwt, ok := pc.c.(ConnWithTimeout)
@@ -538,7 +538,7 @@ func (ac *activeConn) DoWithTimeout(timeout time.Duration, commandName string, a
 
 func (ac *activeConn) Send(commandName string, args ...interface{}) error {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return errConnClosed
 	}
 	ci := lookupCommandInfo(commandName)
@@ -548,7 +548,7 @@ func (ac *activeConn) Send(commandName string, args ...interface{}) error {
 
 func (ac *activeConn) Flush() error {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return errConnClosed
 	}
 	return pc.c.Flush()
@@ -556,7 +556,7 @@ func (ac *activeConn) Flush() error {
 
 func (ac *activeConn) Receive() (reply interface{}, err error) {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return nil, errConnClosed
 	}
 	return pc.c.Receive()
@@ -564,7 +564,7 @@ func (ac *activeConn) Receive() (reply interface{}, err error) {
 
 func (ac *activeConn) ReceiveWithTimeout(timeout time.Duration) (reply interface{}, err error) {
 	pc := ac.pc
-	if pc == nil {
+	if pc == nil || pc.c == nil {
 		return nil, errConnClosed
 	}
 	cwt, ok := pc.c.(ConnWithTimeout)
